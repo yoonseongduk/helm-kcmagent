@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{.Values.master.name}}
+  namespace: {{.Release.Namespace}}
+  labels:
+    app.kubernetes.io/name: {{.Values.master.name}}
+    helm.sh/chart: {{ printf "%s-%s" .Chart.Name .Chart.Version }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/version: {{ .Chart.AppVersion }}
+    app.kubernetes.io/part-of: {{ .Chart.Name }}
+spec:
+  selector:
+    app.kubernetes.io/name: {{.Values.master.name}}
+  clusterIP: None
+  ports:
+    - name: nats
+      port: {{.Values.master.port}}
+      targetPort: nats

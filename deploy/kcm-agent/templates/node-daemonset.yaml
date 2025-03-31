@@ -1,0 +1,102 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: {{.Values.node.name}}
+  namespace: {{.Release.Namespace}}
+  labels:
+    app.kubernetes.io/name: {{.Values.node.name}}
+    helm.sh/chart: {{ printf "%s-%s" .Chart.Name .Chart.Version }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/version: {{ .Chart.AppVersion }}
+    app.kubernetes.io/part-of: {{ .Chart.Name }}
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{.Values.node.name}}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{.Values.node.name}}
+        helm.sh/chart: {{ printf "%s-%s" .Chart.Name .Chart.Version }}
+        app.kubernetes.io/managed-by: {{ .Release.Service }}
+        app.kubernetes.io/version: {{ .Chart.AppVersion }}
+        app.kubernetes.io/part-of: {{ .Chart.Name }}
+    spec:
+      hostNetwork: true
+      hostPID: true
+      dnsPolicy: ClusterFirstWithHostNet
+      automountServiceAccountToken: true
+      serviceAccountName: {{.Values.node.name}}
+      tolerations:
+        - key: "node-role.kubernetes.io/master"
+          operator: "Exists"
+          effect: "NoSchedule"
+        - key: "node-role.kubernetes.io/control-plane"
+          operator: "Exists"
+          effect: "NoSchedule"
+        - key: "node-role.kubernetes.io/etcd"
+          effect: "NoExecute"
+      containers:
+        - name: {{.Values.node.name}}
+          image: {{.Values.image}}
+          imagePullPolicy: {{.Values.pullPolicy}}
+          command: [ "/bin/kcm-agent" ]
+          args: [ "node" ]
+          envFrom:
+            - configMapRef:
+                name: {{ .Release.Name }}-configmap
+            - secretRef:
+                name: {{.Release.Name}}-secret
+          env:
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            - name: POD_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.uid
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: NODE_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+            - name: NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+            - name: HEALTH_CHECK_PORT
+              value: "{{.Values.node.healthCheckPort}}"
+            - name: HOST_PROC_PATH
+              value: "/host/proc"
+            - name: HOST_POD_LOG_PATH
+              value: "/host/var/log/pods"
+          ports:
+            - containerPort: {{.Values.node.healthCheckPort}}
+              name: health-check
+          volumeMounts:
+            - mountPath: /host/proc
+              name: proc
+              readOnly: true
+            - mountPath: /host/var/log/pods
+              name: logs
+              readOnly: true
+          resources:
+            limits:
+              cpu: {{.Values.node.resources.limits.cpu}}
+              memory: {{.Values.node.resources.limits.memory}}
+            requests:
+              cpu: {{.Values.node.resources.requests.cpu}}
+              memory: {{.Values.node.resources.requests.memory}}
+      volumes:
+        - name: proc
+          hostPath:
+            path: /proc
+            type: ""
+        - name: logs
+          hostPath:
+            path: /var/log/pods
+            type: ""

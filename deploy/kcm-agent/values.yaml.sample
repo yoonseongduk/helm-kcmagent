@@ -1,0 +1,48 @@
+clusterName: "single-kube-213-104"
+image: yoonseongduk/kcm-agent:hotfix
+pullPolicy: "Always"
+kcm:
+   orgId: "675bf43e20dee972e1b6417b"
+   addr: "221.141.145.157:7575"
+   token: ""
+   insecure: true
+
+master:
+  name: "kcm-master-agent"
+  insecure: true
+  port: 4222
+  healthCheckPort: 8080
+  resources:
+    limits:
+      cpu: "250m"
+      memory: "512Mi"
+    requests:
+        cpu: "50m"
+        memory: "50Mi"
+
+node:
+  name: "kcm-node-agent"
+  healthCheckPort: 8080
+  resources:
+    limits:
+      cpu: "100m"
+      memory: "128Mi"
+    requests:
+        cpu: "10m"
+        memory: "32Mi"
+
+#prometheus-node-exporter:
+#    service:
+#      enabled: false
+#      port: 9200
+#      targetPort: 9200
+# ---------------------
+# image: yoonseongduk/kcm-agent:release-10.1.2
+# image: "192.168.200.78:5000/kcm-agent:develop"
+# pullPolicy: "Always"
+# pullPolicy: "IfNotPresent"
+# 6721dbc69533532c3b67e7e7  aws 
+# 6718809443a61228f5b3835e  192.168.213.107
+#  addr: "43.202.150.66:7575"
+# timezone: "UTC"  
+# timezone: "Asia/Seoul"  

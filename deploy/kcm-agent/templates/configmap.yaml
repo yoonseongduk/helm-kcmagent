@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-configmap
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: {{ .Chart.Name }}
+    helm.sh/chart: {{ printf "%s-%s" .Chart.Name .Chart.Version }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/version: {{ .Chart.AppVersion }}
+    app.kubernetes.io/part-of: {{ .Chart.Name }}
+data:
+  CLUSTER_NAME: {{ .Values.clusterName | quote}}
+  KCM_MASTER_INSECURE: {{ .Values.master.insecure | quote}}
+  KCM_MASTER_PORT: {{ .Values.master.port | quote}}
+  KCM_MASTER_ADDR: {{ .Values.master.name }}.{{ .Release.Namespace }}.svc.cluster.local
