@@ -60,3 +60,19 @@ master
 # ==> git branch -m master main
 # ==> git push -u origin main 
 ```
+
+
+# helm repo add 실패시 다음을 적용함. 
+
+```
+- GitHub 설정:
+    - 브라우저에서 https://github.com/yoonseongduk/helm-charts에 접속.
+    -             https://github.com/yoonseongduk/helm-kcmagent
+    - Settings > Pages로 이동.
+    - "Source"를 main 브랜치로 설정하고, 루트 디렉토리(/ (root))를 선택한 후 Save.
+    - 설정 후 제공되는 URL(예: https://yoonseongduk.github.io/helm-charts/)을 확인.
+
+- Helm 저장소 추가:
+    helm repo add kcm-agent https://yoonseongduk.github.io/helm-charts/
+    
+```
