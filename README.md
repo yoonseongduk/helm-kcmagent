@@ -76,3 +76,13 @@ master
     helm repo add kcm-agent https://yoonseongduk.github.io/helm-charts/
     
 ```
+
+### helm repo add 가 정상 동작하려면 다음 url 이 정상이어야 한다. 
+
+```
+
+https://yoonseongduk.github.io/helm-charts/
+https://yoonseongduk.github.io/helm-kcmagent/
+https://yoonseongduk.github.io/helmcharts-kcmagent/
+
+```
