@@ -17,18 +17,29 @@ cd helmcharts-kcmagent
 mkdir -p ../helm-kcmagent/deploy/kcm-agent/
 cp -arp ./deploy/kcm-agent/* ../helm-kcmagent/
 
-
+# ubuntu-shell 
 # helm package ./deploy/kcm-agent/
 # --> kcm-agent-0.0.1.tgz 
 # helm repo index --url https://yoonseongduk.github.io/helm-kcmagent/ . 
 # --> index.yaml 
 #
 
-# git 초기화
+# git 초기화 -- power-shell
 git init
 git add .
 git commit -m "Initial commit: Add kcm-agent helm charts"
 
-# 원격 저장소 연결 및 push
-git remote add origin https://github.com/yoonseongduk/kcm-agent-helm-charts.git
+# 원격 저장소 연결 및 push -- power-shell
+git remote add origin https://github.com/yoonseongduk/helm-kcmagent.git
 git push -u origin main
+
+# git push -u origin main 
+
+```
+  --> error 발생시 ## branch 가 master 인경우 ##
+# git branch 
+master 
+# ==> git branch -m master main
+# ==> git push -u origin main 
+
+```
